@@ -1,0 +1,16 @@
+import '@material/mwc-button';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-list/mwc-check-list-item';
+import '@compas-oscd/open-scd/dist/wizard-checkbox.js';
+import '@compas-oscd/open-scd/dist/wizard-textfield.js';
+import '@compas-oscd/open-scd/dist/wizard-select.js';
+import '@compas-oscd/open-scd/dist/filtered-list.js';
+import { Wizard, WizardMenuActor } from '@compas-oscd/open-scd/dist/foundation.js';
+import { ComplexAction } from '@compas-oscd/core';
+export declare function createReportControlWizard(ln0OrLn: Element): Wizard;
+export declare function reportControlParentSelector(doc: XMLDocument): Wizard;
+export declare function removeReportControlAction(element: Element): ComplexAction | null;
+export declare function reportControlCopyToIedSelector(element: Element): Wizard;
+export declare function removeReportControl(element: Element): WizardMenuActor;
+export declare function editReportControlWizard(element: Element): Wizard;
+export declare function selectReportControlWizard(element: Element): Wizard;
