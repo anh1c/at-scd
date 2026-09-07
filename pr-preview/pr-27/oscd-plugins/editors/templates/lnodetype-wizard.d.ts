@@ -1,0 +1,10 @@
+import '@material/mwc-button';
+import '@material/mwc-list';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-select';
+import '@compas-oscd/open-scd/dist/wizard-textfield.js';
+import '@compas-oscd/open-scd/dist/wizard-checkbox.js';
+import '@compas-oscd/open-scd/dist/wizard-select.js';
+import { Wizard } from '@compas-oscd/open-scd/dist/foundation.js';
+export declare function createLNodeTypeWizard(parent: Element, templates: Document, nsd74: XMLDocument, nsd7420: XMLDocument): Wizard;
+export declare function lNodeTypeWizard(lNodeTypeIdentity: string, doc: XMLDocument): Wizard | undefined;
