@@ -129,7 +129,7 @@
     "@open-wc/semantic-dom-diff": "0.19.5",
     "@open-wc/testing": "2.5.33",
     "@types/marked": "2.0.5",
-    "@types/node": "18.19.130",
+    "@types/node": "26.4.1",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "@web/dev-server-esbuild": "0.2.16",
