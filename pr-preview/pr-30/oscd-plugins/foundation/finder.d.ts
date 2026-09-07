@@ -1,0 +1,11 @@
+import { TemplateResult } from 'lit-element';
+import '@compas-oscd/open-scd/dist/finder-list.js';
+import { Directory } from '@compas-oscd/open-scd/dist/finder-list.js';
+export declare function getDisplayString(entry: string): string;
+export declare function getReader(doc: Document, getChildren: (element: Element) => Element[]): (path: string[]) => Promise<Directory>;
+export declare function iEDPicker(doc: XMLDocument): TemplateResult;
+export declare function iEDsPicker(doc: XMLDocument): TemplateResult;
+export declare function getDataModelChildren(parent: Element): Element[];
+export declare function dataAttributePicker(server: Element): TemplateResult;
+export declare function getSMVDataChildren(parent: Element): Element[];
+export declare function sampledValueDataPicker(server: Element): TemplateResult;
