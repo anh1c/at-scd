@@ -1,0 +1,13 @@
+import '@material/mwc-list/mwc-list-item.js';
+import '@compas-oscd/open-scd/dist/wizard-checkbox.js';
+import '@compas-oscd/open-scd/dist/wizard-textfield.js';
+import '@compas-oscd/open-scd/dist/wizard-select.js';
+import '@compas-oscd/open-scd/dist/filtered-list.js';
+import { Wizard } from '@compas-oscd/open-scd/dist/foundation.js';
+import { ComplexAction } from '@compas-oscd/core';
+export declare function getSMV(element: Element): Element | null;
+export declare function removeSampledValueControlAction(element: Element): ComplexAction | null;
+export declare function createSampledValueControlWizard(ln0OrLn: Element): Wizard;
+export declare function sampledValueControlParentSelector(doc: XMLDocument): Wizard;
+export declare function editSampledValueControlWizard(element: Element): Wizard;
+export declare function selectSampledValueControlWizard(element: Element): Wizard;
