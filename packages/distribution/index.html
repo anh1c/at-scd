@@ -36,13 +36,13 @@
         sizes="192x192"
         href="/public/icon-192x192.png">
 
-  <title>OpenSCD</title>
+  <title>AT SCD</title>
 </head>
 
 <body>
   <open-scd></open-scd>
 
-  <script src="/src/polyfill/scoped-custom-elements-polyfill.js"></script>
+  <script src="/polyfill/scoped-custom-elements-polyfill.js"></script>
 
   <script>
     const _customElementsDefine = window.customElements.define;
@@ -55,8 +55,14 @@
   <script type="module"
           src="./main.js"></script>
   <script>
-    if ('serviceWorker' in navigator)
-      navigator.serviceWorker.register('/sw.js');
+    if ('serviceWorker' in navigator && location.protocol !== 'app:') {
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+        navigator.serviceWorker.getRegistrations().then(registrations =>
+          registrations.forEach(registration => registration.unregister())
+        );
+      else
+        navigator.serviceWorker.register('/sw.js');
+    }
   </script>
   <script>
     const openScd = document.querySelector("open-scd");

@@ -48,9 +48,20 @@ export class OscdMenuTabs extends LitElement {
   }
 
   static styles = css`
+    :host {
+      display: block;
+      background: var(--oscd-base2);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 8px;
+    }
+
     mwc-tab {
-      background-color: var(--primary);
-      --mdc-theme-primary: var(--mdc-theme-on-primary);
+      background-color: var(--oscd-base3);
+      --mdc-theme-primary: #1d4ed8;
+      --mdc-tab-text-label-color-default: var(--oscd-base00);
+      --mdc-tab-text-label-color-active: #1d4ed8;
+      --mdc-tab-indicator-active-indicator-color: #1d4ed8;
+      border-radius: 4px 4px 0 0;
     }
   `
 

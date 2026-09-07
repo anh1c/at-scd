@@ -17,6 +17,7 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@11.5.0",
   "type": "module",
+  "main": "electron/main.mjs",
   "files": [
     "./dist/**"
   ],
@@ -39,7 +40,28 @@
     "doc": "pnpm run doc:clean && pnpm run doc:typedoc && pnpm run doc:wca",
     "build": "vite build",
     "start": "vite",
-    "preview": "pnpm run build && vite"
+    "preview": "pnpm run build && vite",
+    "package:win": "electron-builder --win nsis"
+  },
+  "build": {
+    "appId": "org.openscd.atscd",
+    "productName": "AT SCD",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon-512x512.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "devDependencies": {
     "@commitlint/cli": "21.1.0",
@@ -54,6 +76,8 @@
     "@web/test-runner": "0.20.2",
     "concurrently": "7.6.0",
     "deepmerge": "4.3.1",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
     "eslint": "8.20.0",
     "eslint-config-prettier": "8.10.2",
     "eslint-plugin-babel": "5.3.1",

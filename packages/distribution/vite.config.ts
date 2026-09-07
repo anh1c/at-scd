@@ -17,6 +17,9 @@ export default defineConfig({
         },
         // Copy the markdown files for the help menu
         { src: '../openscd/md/*', dest: 'md' },
+        { src: 'src/polyfill/scoped-custom-elements-polyfill.js', dest: 'polyfill' },
+        { src: '../../LICENSE.md', dest: '.' },
+        { src: '../plugins/dist/**/*', dest: 'oscd-plugins' },
       ],
     }),
   ],

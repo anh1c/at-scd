@@ -101,52 +101,52 @@ export function getTheme(theme: Settings['theme']): TemplateResult {
 }
 
 const bodyStyles: Record<Settings['theme'], string> = {
-  dark: 'background: #073642',
-  light: 'background: #eee8d5',
+  dark: 'background: #0f2348',
+  light: 'background: #1e3c72',
 };
 
 const themes: Record<Settings['theme'], TemplateResult> = {
   light: html`
     <style>
       * {
-        --base03: #002b36;
-        --base02: #073642;
-        --base01: #586e75;
-        --base00: #657b83;
-        --base0: #839496;
-        --base1: #93a1a1;
-        --base2: #eee8d5;
-        --base3: #fdf6e3;
-        --yellow: #b58900;
-        --orange: #cb4b16;
-        --red: #dc322f;
-        --magenta: #d33682;
-        --violet: #6c71c4;
-        --blue: #268bd2;
-        --cyan: #2aa198;
-        --green: #859900;
+        --base03: #0f172a;
+        --base02: #1e293b;
+        --base01: #334155;
+        --base00: #475569;
+        --base0: #64748b;
+        --base1: #94a3b8;
+        --base2: #f1f5f9;
+        --base3: #ffffff;
+        --yellow: #f59e0b;
+        --orange: #ea580c;
+        --red: #dc2626;
+        --magenta: #d4537e;
+        --violet: #7f77dd;
+        --blue: #1d4ed8;
+        --cyan: #00d2ff;
+        --green: #16a34a;
       }
     </style>
   `,
   dark: html`
     <style>
       * {
-        --base03: #fdf6e3;
-        --base02: #eee8d5;
-        --base01: #93a1a1;
-        --base00: #839496;
-        --base0: #657b83;
-        --base1: #586e75;
-        --base2: #073642;
-        --base3: #002b36;
-        --yellow: #b58900;
-        --orange: #cb4b16;
-        --red: #dc322f;
-        --magenta: #d33682;
-        --violet: #6c71c4;
-        --blue: #268bd2;
-        --cyan: #2aa198;
-        --green: #859900;
+        --base03: #f8fafc;
+        --base02: #e2e8f0;
+        --base01: #cbd5e1;
+        --base00: #94a3b8;
+        --base0: #64748b;
+        --base1: #475569;
+        --base2: #172554;
+        --base3: #0f2348;
+        --yellow: #fbbf24;
+        --orange: #fb923c;
+        --red: #f87171;
+        --magenta: #f472b6;
+        --violet: #a5b4fc;
+        --blue: #60a5fa;
+        --cyan: #00d2ff;
+        --green: #4ade80;
       }
     </style>
   `,

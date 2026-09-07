@@ -457,7 +457,10 @@ export class OscdLayout extends LitElement {
    * Make sure to use slot="title" for the returned template
    */
   protected renderTitle(): TemplateResult {
-    return  html`<div slot="title" id="title">${this.docName}</div>`;
+    return html`<div slot="title" id="title">
+      <img class="brand-logo" src="/at-scd-logo.png?v=2" alt="AT SCD" />
+      <span class="workspace-name">${this.docName || 'Engineering Workspace'}</span>
+    </div>`;
   }
 
   /**
@@ -603,9 +606,16 @@ export class OscdLayout extends LitElement {
     if(this.doc){ return html``; }
 
     return html`
-      <div class="landing">
-        ${renderMenuItems(this.menu, this.menuUI)}
-      </div>`
+      <section class="landing">
+        <div class="landing-panel">
+          <img class="landing-logo" src="/at-scd-logo.png?v=2" alt="AT SCD" />
+          <h1>Substation configuration starts here</h1>
+          <p>Open, create, and engineer IEC 61850 SCL projects in one workspace.</p>
+          <div class="landing-actions">
+            ${renderMenuItems(this.menu, this.menuUI)}
+          </div>
+        </div>
+      </section>`
 
       function renderMenuItems(menuItemsAndDividers: (MenuItem | 'divider')[], menuUI: Drawer){
 
@@ -615,13 +625,19 @@ export class OscdLayout extends LitElement {
             if(mi.kind !== 'top' || mi.disabled?.()) { return html``; }
 
             return html`
-              <mwc-icon-button
-                class="landing_icon"
-                icon="${mi.icon}"
+              <button
+                class="landing-action"
+                type="button"
                 @click="${() => clickListItem(index)}"
               >
-                <div class="landing_label">${mi.name}</div>
-              </mwc-icon-button>
+                <mwc-icon class="landing-action-icon">${mi.icon}</mwc-icon>
+                <span>
+                  <strong>${mi.name}</strong>
+                  <small>${mi.name === 'Open project'
+                    ? 'Choose an existing SCL configuration.'
+                    : 'Create a new SCL engineering project.'}</small>
+                </span>
+              </button>
             `
           })
 
@@ -666,18 +682,64 @@ export class OscdLayout extends LitElement {
 
 
   static styles = css`
+    :host {
+      display: block;
+      min-height: 100vh;
+      color: var(--oscd-base01);
+      font-family: var(--oscd-text-font), Roboto, Arial, sans-serif;
+    }
+
     mwc-drawer {
       position: absolute;
       top: 0;
+      --mdc-theme-surface: var(--oscd-base3);
+      --mdc-drawer-fill-color: var(--oscd-base3);
+      --mdc-drawer-heading-ink-color: var(--oscd-base03);
+      --mdc-drawer-item-activated-fill-color: #eff6ff;
+      --mdc-drawer-item-activated-ink-color: #1d4ed8;
+      --mdc-list-side-padding: 10px;
+      --mdc-list-item-graphic-margin: 12px;
+      border-radius: 0 12px 12px 0;
     }
 
     mwc-top-app-bar-fixed {
       --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
+      --mdc-theme-primary: #1e3c72;
+      --mdc-theme-on-primary: #ffffff;
+      --mdc-top-app-bar-fill-color: #1e3c72;
+      --mdc-top-app-bar-ink-color: #ffffff;
+      --mdc-top-app-bar-section-fill-color: #1e3c72;
+      box-shadow: 0 2px 12px rgba(15, 45, 92, 0.28);
     } /* hack to fix disabled icon buttons rendering black */
 
+    #title {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-logo {
+      background: #ffffff;
+      border-radius: 5px;
+      height: 28px;
+      padding: 3px 7px;
+      width: 105px;
+    }
+
+    .workspace-name {
+      border-left: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 13px;
+      font-weight: 400;
+      opacity: 0.9;
+      padding-left: 12px;
+    }
+
     mwc-tab {
-      background-color: var(--primary);
-      --mdc-theme-primary: var(--mdc-theme-on-primary);
+      background-color: var(--oscd-base3);
+      --mdc-theme-primary: #1d4ed8;
+      --mdc-tab-text-label-color-default: var(--oscd-base00);
+      --mdc-tab-text-label-color-active: #1d4ed8;
     }
 
     input[type='file'] {
@@ -686,6 +748,9 @@ export class OscdLayout extends LitElement {
 
     mwc-dialog {
       --mdc-dialog-max-width: 98vw;
+      --mdc-theme-surface: var(--oscd-base3);
+      --mdc-dialog-scrim-color: rgba(15, 45, 92, 0.18);
+      --mdc-shape-medium: 12px;
     }
 
     mwc-dialog > form {
@@ -700,8 +765,8 @@ export class OscdLayout extends LitElement {
 
     mwc-linear-progress {
       position: fixed;
-      --mdc-linear-progress-buffer-color: var(--primary);
-      --mdc-theme-primary: var(--secondary);
+      --mdc-linear-progress-buffer-color: #1e3c72;
+      --mdc-theme-primary: var(--cyan);
       left: 0px;
       top: 0px;
       width: 100%;
@@ -719,41 +784,136 @@ export class OscdLayout extends LitElement {
     }
 
     .landing {
+      align-items: center;
+      background: linear-gradient(160deg, #f8fbff, #edf4fd 52%, #f5f9ff);
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      padding: 88px 24px 24px;
+      position: relative;
+    }
+
+    .landing::before,
+    .landing::after {
+      border-radius: 50%;
+      content: '';
+      pointer-events: none;
       position: absolute;
+    }
+
+    .landing::before {
+      background: radial-gradient(circle at 30% 30%, rgba(86, 154, 236, 0.22), transparent 70%);
+      height: 460px;
+      left: -160px;
+      top: -180px;
+      width: 460px;
+    }
+
+    .landing::after {
+      background: radial-gradient(circle at 35% 35%, rgba(34, 85, 158, 0.18), transparent 70%);
+      bottom: -240px;
+      height: 520px;
+      right: -220px;
+      width: 520px;
+    }
+
+    .landing-panel {
+      background: linear-gradient(155deg, rgba(247, 252, 255, 0.82), rgba(233, 244, 255, 0.72));
+      backdrop-filter: blur(14px) saturate(118%);
+      border: 1px solid rgba(167, 197, 233, 0.74);
+      border-radius: 18px;
+      box-shadow: 0 14px 28px rgba(23, 54, 104, 0.18);
+      box-sizing: border-box;
+      max-width: 520px;
+      padding: 32px;
+      position: relative;
       text-align: center;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      width: 100%;
+      z-index: 1;
+    }
+
+    .landing-logo {
+      height: auto;
+      max-width: 220px;
       width: 100%;
     }
 
-    .landing_icon:hover {
-      box-shadow: 0 12px 17px 2px rgba(0, 0, 0, 0.14),
-        0 5px 22px 4px rgba(0, 0, 0, 0.12), 0 7px 8px -4px rgba(0, 0, 0, 0.2);
+    .landing h1 {
+      color: #123f79;
+      font-size: clamp(26px, 5vw, 34px);
+      line-height: 1.15;
+      margin: 22px 0 10px;
     }
 
-    .landing_icon {
-      margin: 12px;
-      border-radius: 16px;
-      width: 160px;
-      height: 140px;
-      text-align: center;
-      color: var(--mdc-theme-on-secondary);
-      background: var(--secondary);
-      --mdc-icon-button-size: 100px;
-      --mdc-icon-size: 100px;
-      --mdc-ripple-color: rgba(0, 0, 0, 0);
-      box-shadow: rgb(0 0 0 / 14%) 0px 6px 10px 0px,
-        rgb(0 0 0 / 12%) 0px 1px 18px 0px, rgb(0 0 0 / 20%) 0px 3px 5px -1px;
-      transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    .landing p {
+      color: #475569;
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 0;
     }
 
-    .landing_label {
-      width: 160px;
-      height: 50px;
-      margin-top: 100px;
-      margin-left: -30px;
-      font-family: 'Roboto', sans-serif;
+    .landing-actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .landing-action {
+      align-items: center;
+      background: linear-gradient(130deg, #1e3c72, #2a5298);
+      border: 0;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(34, 76, 140, 0.2);
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      font: inherit;
+      gap: 14px;
+      padding: 15px 18px;
+      text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+      width: 100%;
+    }
+
+    .landing-action:hover {
+      box-shadow: 0 14px 24px rgba(34, 76, 140, 0.28);
+      transform: translateY(-1px);
+    }
+
+    .landing-action:focus-visible {
+      outline: 3px solid rgba(0, 210, 255, 0.7);
+      outline-offset: 3px;
+    }
+
+    .landing-action-icon {
+      font-size: 28px;
+    }
+
+    .landing-action strong,
+    .landing-action small {
+      display: block;
+    }
+
+    .landing-action strong {
+      font-size: 15px;
+    }
+
+    .landing-action small {
+      font-size: 12px;
+      margin-top: 3px;
+      opacity: 0.82;
+    }
+
+    @media (max-width: 480px) {
+      .landing {
+        padding: 80px 16px 16px;
+      }
+
+      .landing-panel {
+        padding: 24px;
+      }
     }
 
     .plugin.menu {

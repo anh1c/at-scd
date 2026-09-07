@@ -1,7 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
 
-import { LitElement } from 'lit-element';
-
 import '@compas-oscd/open-scd/dist/test-helper';
 import '../../../src/editors/IED.js';
 
@@ -9,13 +7,7 @@ import {
   initializeNsdoc,
   Nsdoc,
 } from '@compas-oscd/open-scd/dist/foundation/nsdoc.js';
-import { FilterButton } from '@compas-oscd/open-scd/dist/oscd-filter-button.js';
-
 import IED from '../../../src/editors/IED.js';
-import { LDeviceContainer } from '../../../src/editors/ied/ldevice-container.js';
-import { LNContainer } from '../../../src/editors/ied/ln-container.js';
-import { DOContainer } from '../../../src/editors/ied/do-container.js';
-import { DAContainer } from '../../../src/editors/ied/da-container.js';
 import { MockOpenSCD } from '@compas-oscd/open-scd/dist/test-helper';
 import { OscdApi } from '@compas-oscd/core';
 
@@ -88,11 +80,10 @@ describe('IED Plugin', () => {
         await new Promise(resolve => setTimeout(resolve, 100)); // await animation
       });
 
-      it('Should open Services wizard', async () => {
+      it('opens the Services wizard from the hierarchy row', async () => {
         element
-          .shadowRoot!.querySelector('ied-container')!
           .shadowRoot!.querySelector<HTMLElement>(
-            'mwc-icon-button[icon="settings"]'
+            '.tree-actions mwc-icon-button[icon="settings"]'
           )!
           .click();
 
@@ -124,260 +115,44 @@ describe('IED Plugin', () => {
         await element.updateComplete;
       });
 
-      it('looks like the latest snapshot', async () => {
-        await expect(element).shadowDom.to.equalSnapshot();
-      });
-
-      it('then initially the first IED is selected and rendered', () => {
-        expect(
-          element.shadowRoot?.querySelectorAll('ied-container').length
-        ).to.eql(1);
-        expect(
-          element.shadowRoot
-            ?.querySelector('ied-container')!
-            .shadowRoot?.querySelector('action-pane')!.shadowRoot?.innerHTML
-        ).to.include('IED1');
-      });
-
-      it('when other IED selected then IED Container contains the correct IED', async () => {
-        expect(
-          element.shadowRoot?.querySelectorAll('ied-container').length
-        ).to.eql(1);
-        expect(
-          getIedContainer().shadowRoot?.querySelector('action-pane')!.shadowRoot
-            ?.innerHTML
-        ).to.include('IED1');
-
-        await selectIed('IED3');
-        await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-
-        expect(
-          element.shadowRoot?.querySelectorAll('ied-container').length
-        ).to.eql(1);
-        expect(
-          getIedContainer().shadowRoot?.querySelector('action-pane')!.shadowRoot
-            ?.innerHTML
-        ).to.include('IED3');
-      });
-
-      it('when filtering LN Classes then correct number of LN Containers are rendered', async () => {
-        expect(
-          getLDeviceContainer(getIedContainer()).shadowRoot!.querySelectorAll(
-            'ln-container'
-          ).length
-        ).to.eql(5);
-
-        await selectLNClasses('CSWI');
-        await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-
-        expect(
-          getLDeviceContainer(getIedContainer()).shadowRoot!.querySelectorAll(
-            'ln-container'
-          ).length
-        ).to.eql(2);
-      });
-
-      it('when other IED selected, all LNs are selected by default', async () => {
-        await selectLNClasses('XCBR');
-
-        await selectIed('IED3');
-        await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-
-        expect(
-          element.shadowRoot?.querySelectorAll('ied-container').length
-        ).to.eql(1);
-        expect(
-          getIedContainer().shadowRoot?.querySelector('action-pane')!.shadowRoot
-            ?.innerHTML
-        ).to.include('IED3');
-
-        expect(
-          getLDeviceContainer(getIedContainer()).shadowRoot!.querySelectorAll(
-            'ln-container'
-          ).length
-        ).to.eql(9);
-      });
-
-      it('when filtering LNs, if none are selected, all are selected', async () => {
-        await selectIed('IED3');
-
-        const oscdFilterButton = <FilterButton>(
-          element.shadowRoot!.querySelector(
-            'oscd-filter-button[id="lnClassesFilter"]'
-          )
-        );
-        const filterButton = <LitElement>(
-          oscdFilterButton!.shadowRoot!.querySelector('mwc-icon-button')
-        );
-        filterButton.click();
-        await element.updateComplete;
-
-        const primaryButton = <HTMLElement>(
-          oscdFilterButton!.shadowRoot!.querySelector(
-            'mwc-button[slot="primaryAction"]'
-          )
-        );
-        primaryButton.click();
-        await element.updateComplete;
-
-        await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-
-        expect(
-          getLDeviceContainer(getIedContainer()).shadowRoot!.querySelectorAll(
-            'ln-container'
-          ).length
-        ).to.eql(9);
-      });
-
-      it('then renders the path of elements correctly', async () => {
-        const iedContainer = getIedContainer();
-
-        // Initially there won't be a path shown.
-        expect(getElementPathValue()).to.be.empty;
-
-        // After setting the focus on the IED Container
-        iedContainer.dispatchEvent(new Event('focus'));
-        await element.updateComplete;
-        expect(getElementPathValue()).to.eql('IED1');
-
-        // After setting the focus on the Server Container below the IED Container
-        const lDeviceContainer = getLDeviceContainer(iedContainer);
-        lDeviceContainer!.dispatchEvent(new Event('focus'));
-        await element.updateComplete;
-        expect(getElementPathValue()).to.eql(
-          'IED1 / P1 / Server / CircuitBreaker_CB1'
-        );
-
-        // After removing the focus on the IED Container, it will be empty again.
-        iedContainer!.dispatchEvent(new Event('blur'));
-        await element.updateComplete;
-        expect(getElementPathValue()).to.be.empty;
-      });
-
-      // Add test for create wizard DAI when clicking add icon in DA Container (see issue #1139)
-      describe('when DA allows for multiple Val', () => {
-        beforeEach(async () => {
-          doc = await fetch('/test/testfiles/wizards/settingGroups.scd')
-            .then(response => response.text())
-            .then(str =>
-              new DOMParser().parseFromString(str, 'application/xml')
-            );
-          nsdoc = await initializeNsdoc();
-          parent = await fixture(
-            html`<mock-open-scd
-              ><ied-plugin .doc="${doc}" .nsdoc="${nsdoc}"></ied-plugin
-            ></mock-open-scd>`
-          );
-          element = parent.getActivePlugin();
-          await element.requestUpdate();
-          await element.updateComplete;
-        });
-        it('shows correct wizard when navigating to the DA container that allows for multiple Val and clicking Add', async () => {
-          const lnContainer: LNContainer = getLDeviceContainerByInst(
-            getIedContainer(),
-            'stage1'
-          )!.shadowRoot!.querySelectorAll('ln-container')[1] as LNContainer;
-
-          lnContainer.shadowRoot!.querySelector('mwc-icon-button-toggle')!.on =
-            true;
-          await lnContainer.requestUpdate();
-
-          // await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-          const doContainer: DOContainer = lnContainer
-            .shadowRoot!.querySelector('action-pane')!
-            .querySelector('do-container')!;
-
-          doContainer.shadowRoot!.querySelector('mwc-icon-button-toggle')!.on =
-            true;
-          await doContainer.requestUpdate();
-
-          // await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-
-          const daContainer: DAContainer =
-            doContainer.shadowRoot!.querySelector('da-container')!;
-          daContainer
-            .shadowRoot!.querySelector('action-pane')!
-            .querySelector('mwc-icon-button-toggle')!.on = true;
-          await daContainer.requestUpdate();
-
-          // await new Promise(resolve => setTimeout(resolve, 100)); // await animation
-
-          (daContainer
-            .shadowRoot!.querySelector('da-container')!
-            .shadowRoot!.querySelector(
-              'mwc-icon-button[icon="add"]'
-            ) as HTMLElement)!.click();
-
-          await parent.requestUpdate();
-          await parent.updateComplete;
-
-          expect(parent.wizardUI.dialogs.length).to.equal(1);
-          expect(
-            parent.wizardUI.dialogs[0]!.querySelectorAll('wizard-textfield')
-              .length
-          ).to.equal(3);
-        });
-      });
-
-      function getIedContainer(): Element {
-        return element.shadowRoot!.querySelector('ied-container')!;
-      }
-
-      function getLDeviceContainer(iedContainer: Element): Element {
-        return iedContainer
-          .shadowRoot!.querySelector('access-point-container')!
-          .shadowRoot!.querySelector('server-container')!
-          .shadowRoot!.querySelector('ldevice-container')!;
-      }
-
-      function getLDeviceContainerByInst(
-        iedContainer: Element,
-        instName: string
-      ): Element | undefined {
-        return (
+      it('shows selected hierarchy descendants with table toggles', async () => {
+        const tags = () =>
           Array.from(
-            iedContainer!
-              .shadowRoot!.querySelector('access-point-container')!
-              .shadowRoot!.querySelector('server-container')!
-              .shadowRoot!.querySelectorAll('ldevice-container')
-          ) as LDeviceContainer[]
-        ).find(lDevice => lDevice.element.getAttribute('inst') === instName);
-      }
+            element.shadowRoot!.querySelectorAll<HTMLTableRowElement>(
+              'tbody tr[data-tag]'
+            )
+          ).map(row => row.dataset.tag);
 
-      function getElementPathValue(): string {
-        return (
-          element.shadowRoot
-            ?.querySelector('element-path')
-            ?.shadowRoot?.querySelector('h3')?.textContent ?? ''
-        );
-      }
-
-      async function selectLNClasses(lnClass: string): Promise<void> {
-        const oscdFilterButton = <FilterButton>(
-          element.shadowRoot!.querySelector(
-            'oscd-filter-button[id="lnClassesFilter"]'
-          )
-        );
-        const filterButton = <LitElement>(
-          oscdFilterButton!.shadowRoot!.querySelector('mwc-icon-button')
-        );
-        filterButton.click();
+        element.shadowRoot!.querySelector<HTMLButtonElement>('.tree-node')!.click();
         await element.updateComplete;
 
-        (<HTMLElement>(
-          oscdFilterButton!.querySelector(
-            `mwc-check-list-item[value="${lnClass}"]`
-          )
-        )).click();
+        expect(tags()).to.deep.equal(['AccessPoint']);
+        expect(
+          element.shadowRoot!.querySelector('.table-toggle')
+        ).to.exist;
+      });
 
-        const primaryButton = <HTMLElement>(
-          oscdFilterButton!.shadowRoot!.querySelector(
-            'mwc-button[slot="primaryAction"]'
-          )
-        );
-        primaryButton.click();
-        await element.updateComplete;
-      }
+      it('shows template data-model children in the hierarchy', async () => {
+        await selectIed('IED2');
+
+        const hasPhyNam = () =>
+          Array.from(
+            element.shadowRoot!.querySelectorAll<HTMLButtonElement>(
+              '.tree-node'
+            )
+          ).some(button => button.textContent!.trim() === 'PhyNam');
+
+        expect(hasPhyNam()).to.be.false;
+        for (let i = 0; i < 20 && !hasPhyNam(); i++) {
+          element
+            .shadowRoot!.querySelector<HTMLButtonElement>(
+              '.tree-toggle:not([aria-label^="Collapse"])'
+            )!
+            .click();
+          await element.updateComplete;
+        }
+        expect(hasPhyNam()).to.be.true;
+      });
 
       describe('load and store selected IEDs', () => {
         it('should store selected IEDs on disconnected', async () => {

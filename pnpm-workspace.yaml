@@ -9,6 +9,8 @@ allowBuilds:
   core-js-bundle: true
   core-js-pure: true
   ejs: true
+  electron: true
+  electron-winstaller: true
   esbuild: true
   fsevents: true
   husky: true
