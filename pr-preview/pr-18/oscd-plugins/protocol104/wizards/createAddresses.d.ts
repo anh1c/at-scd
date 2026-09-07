@@ -1,0 +1,11 @@
+import '@material/mwc-list/mwc-list-item';
+import '@omicronenergy/oscd-ui/switch/oscd-switch.js';
+import '@compas-oscd/open-scd/dist/wizard-textfield.js';
+import '@compas-oscd/open-scd/dist/WizardDivider.js';
+import { Wizard, WizardActor } from '@compas-oscd/open-scd/dist/foundation.js';
+import { TiInformation } from '../foundation/cdc.js';
+export declare function createAddressesAction(lnElement: Element, doElement: Element, hasControlTis: boolean): WizardActor;
+export declare function disableCheckSwitch(tiInfo: Record<string, TiInformation>): boolean;
+export declare function disableInvertedSwitch(tiInfo: Record<string, TiInformation>): boolean;
+export declare function disableMonitorInvertedSwitch(tiInfo: Record<string, TiInformation>, tiNumberInfo: string): boolean;
+export declare function createAddressesWizard(lnElement: Element, doElement: Element): Wizard;
