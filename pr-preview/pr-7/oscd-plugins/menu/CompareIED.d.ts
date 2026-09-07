@@ -1,0 +1,35 @@
+import { LitElement, TemplateResult } from 'lit-element';
+import '@material/mwc-dialog';
+import '@material/mwc-list';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-formfield';
+import '@material/mwc-checkbox';
+import { Dialog } from '@material/mwc-dialog';
+import '@compas-oscd/open-scd/dist/plain-compare-list.js';
+export default class CompareIEDPlugin extends LitElement {
+    doc: XMLDocument;
+    editCount: number;
+    templateDoc: XMLDocument | undefined;
+    selectedProjectIed: Element | undefined;
+    selectedTemplateIed: Element | undefined;
+    dialog: Dialog;
+    private templateFileUI;
+    docName: string;
+    private templateDocName;
+    get ieds(): Element[];
+    get templateIeds(): Element[];
+    run(): Promise<void>;
+    private onClosed;
+    private getSelectedListItem;
+    private getTemplateFile;
+    private renderSelectIedButton;
+    private renderCompareButton;
+    protected renderCloseButton(): TemplateResult;
+    protected renderCompare(): TemplateResult;
+    private renderIEDList;
+    protected renderIEDLists(): TemplateResult;
+    protected renderSelectTemplateFile(): TemplateResult;
+    private renderDialog;
+    render(): TemplateResult;
+    static styles: import("lit-element").CSSResult;
+}
