@@ -1,0 +1,10 @@
+import { TemplateResult } from 'lit-element';
+import '@material/mwc-list';
+import '@material/mwc-list/mwc-list-item';
+import '@compas-oscd/open-scd/dist/wizard-textfield.js';
+import { Wizard, WizardActor } from '@compas-oscd/open-scd/dist/foundation.js';
+export declare function renderIEDWizard(name: string | null, desc: string | null, type: string | null, manufacturer: string | null, configVersion: string | null, originalSclVersion: string, engRight: string | null, owner: string | null, reservedNames: string[]): TemplateResult[];
+export declare function reservedNamesIED(currentElement: Element): string[];
+export declare function removeIEDAndReferences(element: Element): WizardActor;
+export declare function removeIEDWizard(element: Element): Wizard | null;
+export declare function editIEDWizard(element: Element): Wizard;
