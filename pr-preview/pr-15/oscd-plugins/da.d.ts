@@ -1,0 +1,11 @@
+import { TemplateResult } from 'lit-html';
+import '@material/mwc-button';
+import '@material/mwc-list/mwc-list-item';
+import '@compas-oscd/open-scd/dist/wizard-checkbox.js';
+import '@compas-oscd/open-scd/dist/wizard-select.js';
+import { Wizard, WizardActor } from '@compas-oscd/open-scd/dist/foundation.js';
+export declare function renderDa(fc: string, dchg: string | null, qchg: string | null, dupd: string | null): TemplateResult[];
+export declare function updateDaAction(element: Element): WizardActor;
+export declare function editDAWizard(element: Element): Wizard;
+export declare function createDaAction(parent: Element): WizardActor;
+export declare function createDaWizard(element: Element): Wizard;
