@@ -60,7 +60,7 @@
     "@web/dev-server": "0.1.32",
     "@web/test-runner": "0.20.2",
     "@web/dev-server-esbuild": "0.2.16",
-    "@web/test-runner-playwright": "0.11.1",
+    "@web/test-runner-playwright": "1.0.0",
     "@web/test-runner-visual-regression": "0.6.6",
     "concurrently": "7.6.0",
     "eslint": "8.20.0",
