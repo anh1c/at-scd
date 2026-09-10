@@ -1,6 +1,7 @@
 {
   "name": "openscd-monorepo",
   "version": "0.45.13",
+  "main": "electron/main.cjs",
   "description": "OpenSCD base distribution and plugins",
   "private": true,
   "scripts": {
@@ -11,7 +12,9 @@
     "graph": "npx nx graph",
     "start": "lerna run start",
     "serve": "nx run @openscd/distribution:serve",
-    "package:win": "pnpm run build && pnpm --filter @openscd/distribution run package:win"
+    "package:win": "pnpm run build && pnpm --filter @openscd/distribution run package:win",
+    "desktop:dev": "pnpm run build && electron .",
+    "desktop:build": "pnpm run build && electron-builder --win nsis"
   },
   "repository": {
     "type": "git",
@@ -26,11 +29,43 @@
     "@commitlint/cli": "21.1.0",
     "@commitlint/config-conventional": "21.1.0",
     "cross-env": "^10.1.0",
+    "electron": "43.4.1",
+    "electron-builder": "26.15.3",
     "husky": "9.1.7",
     "lerna": "7.4.2",
     "nx": "18.3.4",
     "playwright": "1.61.1",
     "rimraf": "5.0.10"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.9"
+  },
+  "build": {
+    "appId": "com.anh1c.atscd",
+    "productName": "AT-SCD",
+    "artifactName": "AT-SCD-Setup-${version}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "packages/distribution/dist/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "allowToChangeInstallationDirectory": false
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "anh1c",
+      "repo": "at-scd"
+    }
   },
   "optionalDependencies": {
     "@nx/nx-linux-x64-gnu": "18.3.4"
